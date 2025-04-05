@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Chat } from "../chat/Chat";
-import { Menu } from "lucide-react";
+import { Menu, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApiKeyModal } from "../modals/ApiKeyModal";
 import { useSettings } from "@/providers/SettingsProvider";
@@ -22,11 +22,11 @@ export function AppLayout() {
     <div className="flex h-screen bg-background">
       {/* Sidebar - dynamic visibility based on state */}
       <div
-        className={`fixed inset-y-0 z-20 flex flex-col w-64 transform transition-transform duration-300 ease-in-out bg-card border-r border-border ${
+        className={`fixed inset-y-0 z-20 flex flex-col w-64 transform transition-transform duration-300 ease-in-out bg-card border-r border-border rounded-r-lg ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0`}
       >
-        <Sidebar onClose={() => setSidebarOpen(false)} />
+        <Sidebar onClose={toggleSidebar} />
       </div>
 
       {/* Main content */}

@@ -7,7 +7,6 @@ import {
   Star,
   Trash2,
   Settings,
-  ChevronRight,
   XCircle,
   ChevronLeft,
 } from "lucide-react";
@@ -46,13 +45,13 @@ export function Sidebar({ onClose }: SidebarProps) {
       <div className="p-4">
         <Button 
           onClick={createNewChat} 
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
         >
           <PlusCircle className="mr-2 h-4 w-4" /> New Chat
         </Button>
       </div>
       
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 rounded-md">
         {starredChats.length > 0 && (
           <div className="px-4 pb-2">
             <h3 className="text-sm font-medium text-muted-foreground flex items-center">
@@ -91,7 +90,7 @@ export function Sidebar({ onClose }: SidebarProps) {
               />
             ))}
             {recentChats.length === 0 && (
-              <div className="text-sm text-muted-foreground p-2">
+              <div className="text-sm text-muted-foreground p-2 rounded-md bg-secondary/50">
                 No recent chats
               </div>
             )}
@@ -101,7 +100,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       
       <div className="p-4 border-t border-border mt-auto">
         <div className="flex items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={() => setSettingsOpen(true)}>
+          <Button variant="ghost" size="sm" onClick={() => setSettingsOpen(true)} className="rounded-lg">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
@@ -130,11 +129,11 @@ interface ChatItemProps {
 function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatItemProps) {
   return (
     <div
-      className={`group flex items-center justify-between rounded-md px-2 py-2 hover:bg-secondary ${
+      className={`group flex items-center justify-between rounded-lg px-2 py-2 hover:bg-secondary ${
         isActive ? "bg-secondary" : ""
       }`}
     >
-      <div className="flex items-center truncate flex-1" onClick={onClick}>
+      <div className="flex items-center truncate flex-1 cursor-pointer" onClick={onClick}>
         <MessageSquare className="h-4 w-4 mr-2 shrink-0 text-muted-foreground" />
         <span className="truncate text-sm">{chat.title}</span>
       </div>
@@ -146,7 +145,7 @@ function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatIt
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6"
+                className="h-6 w-6 rounded-md"
                 onClick={(e) => {
                   e.stopPropagation();
                   onStar();
@@ -171,7 +170,7 @@ function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatIt
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 text-destructive"
+                className="h-6 w-6 rounded-md text-destructive"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
