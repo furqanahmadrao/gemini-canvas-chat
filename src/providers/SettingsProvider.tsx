@@ -2,7 +2,7 @@
 import React, { createContext, useContext } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-export type AIModel = "gemini-pro" | "gemini-pro-vision";
+export type AIModel = "gemini-pro" | "gemini-pro-vision" | "gemini-ultra" | "gemini-flash";
 
 interface Settings {
   apiKey: string | null;

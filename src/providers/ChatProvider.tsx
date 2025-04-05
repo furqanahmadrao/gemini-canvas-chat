@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useToast } from "@/hooks/use-toast";
+import { useSettings } from "./SettingsProvider";
 
 export interface Message {
   id: string;
@@ -41,7 +42,7 @@ interface ChatProviderProps {
 }
 
 export function ChatProvider({ children }: ChatProviderProps) {
-  const [apiKey, setApiKey] = useLocalStorage<string | null>("gemini-api-key", null);
+  const { settings } = useSettings();
   const [chats, setChats] = useLocalStorage<Chat[]>("gemini-chats", []);
   const [currentChatId, setCurrentChatId] = useLocalStorage<string | null>("gemini-current-chat", null);
   const [isLoading, setIsLoading] = useState(false);
@@ -139,7 +140,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
   // This function will call the Gemini API with the user's message and stream the response
   const sendMessage = async (message: string) => {
-    if (!apiKey) {
+    if (!settings.apiKey) {
       toast({
         title: "API Key Required",
         description: "Please enter your Gemini API key in settings",
@@ -167,8 +168,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
     setIsLoading(true);
 
     try {
-      // Simulate the API call for now
-      const response = await simulateStreamingResponse(message, (partialResponse) => {
+      // Simulate the API call but mention the selected model
+      const response = await simulateStreamingResponse(message, settings.model, (partialResponse) => {
         updateMessage(aiMessage!.id, partialResponse);
       });
       
@@ -188,17 +189,19 @@ export function ChatProvider({ children }: ChatProviderProps) {
     }
   };
 
-  // Simulate streaming response (this would be replaced with real API call)
+  // Simulate streaming response with model information
   const simulateStreamingResponse = async (
     message: string, 
+    model: string,
     onPartialResponse: (text: string) => void
   ): Promise<string> => {
     const responses = [
-      "I'm analyzing your question...",
+      `I'm analyzing your question using ${model}...`,
       "Based on my understanding, here's what I can tell you:",
       "This is a simulated response from the Gemini API. In a real implementation, this would be streaming from the API.",
       "Your message was: " + message,
       "\n\nYou can provide your actual Gemini API key in settings to get real responses.",
+      `\n\nCurrently using model: ${model}`,
       "\n\nSome things you can try:\n- Ask me about code\n- Request information on a topic\n- Ask me to write something creative",
     ];
     

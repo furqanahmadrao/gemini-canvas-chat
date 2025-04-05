@@ -14,9 +14,13 @@ export function AppLayout() {
   // Check if the API key is set
   const isApiKeySet = !!settings.apiKey;
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar - hidden on mobile by default */}
+      {/* Sidebar - dynamic visibility based on state */}
       <div
         className={`fixed inset-y-0 z-20 flex flex-col w-64 transform transition-transform duration-300 ease-in-out bg-card border-r border-border ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -32,12 +36,12 @@ export function AppLayout() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={toggleSidebar}
             className="md:hidden"
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <div className="text-lg font-medium ml-2 md:ml-0">Gemini Chat</div>
+          <div className="text-lg font-medium ml-2 md:ml-0">Gemini Chatbot</div>
           <div className="flex items-center space-x-2">
             {/* This space can be used for additional header controls */}
           </div>

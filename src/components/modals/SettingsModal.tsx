@@ -58,7 +58,7 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
-            Customize your Gemini Chat experience
+            Customize your Gemini Chatbot experience
           </DialogDescription>
         </DialogHeader>
 
@@ -157,6 +157,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                 <SelectContent>
                   <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
                   <SelectItem value="gemini-pro-vision">Gemini Pro Vision</SelectItem>
+                  <SelectItem value="gemini-ultra">Gemini Ultra</SelectItem>
+                  <SelectItem value="gemini-flash">Gemini Flash</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-sm text-muted-foreground mt-1">
