@@ -20,16 +20,15 @@ export function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleScrollPositionChange = (position: { y: number }) => {
-    // Calculate the scroll height, visible area height, and scroll position
+  const handleScroll = () => {
+    // Calculate the scroll position using the scroll area ref
+    if (!scrollAreaRef.current) return;
+    
     const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) return;
-
-    const { scrollHeight, clientHeight } = scrollArea;
-    const { y } = position;
+    const { scrollTop, scrollHeight, clientHeight } = scrollArea;
     
     // Show scroll button when not at the bottom
-    const isAtBottom = Math.abs(y - (scrollHeight - clientHeight)) < 50;
+    const isAtBottom = Math.abs((scrollTop + clientHeight) - scrollHeight) < 50;
     setShowScrollButton(!isAtBottom);
   };
   
@@ -44,6 +43,17 @@ export function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [currentChat?.id]);
+
+  // Add scroll event listener
+  useEffect(() => {
+    const scrollAreaElement = scrollAreaRef.current;
+    if (scrollAreaElement) {
+      scrollAreaElement.addEventListener('scroll', handleScroll);
+      return () => {
+        scrollAreaElement.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
 
   if (!currentChat) {
     return <EmptyState />;
@@ -60,8 +70,7 @@ export function Chat() {
       {/* Chat messages area */}
       <ScrollArea 
         ref={scrollAreaRef}
-        className="flex-1" 
-        onScrollPositionChange={handleScrollPositionChange}
+        className="flex-1"
       >
         <div className={`p-4 pb-24 ${textSizeClasses[settings.textSize]}`}>
           <MessageList messages={currentChat.messages} />
