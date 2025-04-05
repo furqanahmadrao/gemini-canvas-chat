@@ -33,10 +33,20 @@ export function Sidebar({ onClose }: SidebarProps) {
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h2 className="text-lg font-semibold">Gemini Chatbot</h2>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose} 
+            className="md:hidden"
+          >
             <XCircle className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={onClose} className="hidden md:flex">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose} 
+            className="hidden md:flex"
+          >
             <ChevronLeft className="h-5 w-5" />
           </Button>
         </div>
