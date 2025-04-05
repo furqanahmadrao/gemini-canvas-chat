@@ -12,6 +12,13 @@ interface AIMessageProps {
   message: Message;
 }
 
+interface CodeProps {
+  node?: any;
+  inline?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
 export function AIMessage({ message }: AIMessageProps) {
   const { settings } = useSettings();
   const isCompact = settings.messageLayout === "compact";
@@ -44,7 +51,7 @@ export function AIMessage({ message }: AIMessageProps) {
           ) : (
             <ReactMarkdown
               components={{
-                code({node, inline, className, children, ...props}) {
+                code({node, inline, className, children, ...props}: CodeProps) {
                   const match = /language-(\w+)/.exec(className || '')
                   return !inline && match ? (
                     <SyntaxHighlighter
