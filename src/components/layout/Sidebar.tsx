@@ -7,72 +7,75 @@ import {
   Star,
   Trash2,
   Settings,
-  ChevronRight,
+  History,
+  HelpCircle,
+  ThumbsUp,
+  ThumbsDown,
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipProvider, 
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 import { SettingsModal } from "../modals/SettingsModal";
 import { ThemeToggle } from "../ui/theme-toggle";
+import {
+  Sidebar as SidebarBase,
+  SidebarContent,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
-interface SidebarProps {
-  onClose?: () => void;
-}
-
-export function Sidebar({ onClose }: SidebarProps) {
+export function Sidebar() {
   const { chats, currentChat, createNewChat, deleteChat, setCurrentChat, starChat } = useChat();
   const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const { state } = useSidebar();
 
   const sortedChats = [...chats].sort((a, b) => b.updatedAt - a.updatedAt);
   const starredChats = sortedChats.filter(chat => chat.starred);
   const recentChats = sortedChats.filter(chat => !chat.starred);
   
   return (
-    <>
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <h2 className="text-lg font-semibold">Gemini Chat</h2>
-        <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">
-          <XCircle className="h-5 w-5" />
-        </Button>
-      </div>
-      
-      <div className="p-4">
-        <Button 
-          onClick={createNewChat} 
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-        >
-          <PlusCircle className="mr-2 h-4 w-4" /> New Chat
-        </Button>
-      </div>
-      
-      <ScrollArea className="flex-1">
-        {starredChats.length > 0 && (
-          <div className="px-4 pb-2">
-            <h3 className="text-sm font-medium text-muted-foreground flex items-center">
-              <Star className="mr-2 h-4 w-4" /> Starred Chats
-            </h3>
-            <div className="mt-2 space-y-1">
-              {starredChats.map(chat => (
-                <ChatItem
-                  key={chat.id}
-                  chat={chat}
-                  isActive={currentChat?.id === chat.id}
-                  onClick={() => setCurrentChat(chat.id)}
-                  onDelete={() => deleteChat(chat.id)}
-                  onStar={() => starChat(chat.id, false)}
-                  starred={true}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+    <SidebarBase 
+      side="left"
+      collapsible="offcanvas"
+      className="border-0 bg-[#1a1a1a] text-white"
+    >
+      <SidebarContent className="flex flex-col h-full p-0 bg-[#1a1a1a]">
+        <div className="p-2 flex justify-center">
+          <Button 
+            onClick={createNewChat}
+            size="icon"
+            variant="ghost"
+            className="text-gray-400 hover:text-white hover:bg-gray-800 w-12 h-12 rounded-full"
+          >
+            <PlusCircle className="h-6 w-6" />
+          </Button>
+        </div>
         
-        <div className="px-4 pb-2 mt-4">
-          <h3 className="text-sm font-medium text-muted-foreground flex items-center">
-            <MessageSquare className="mr-2 h-4 w-4" /> Recent Chats
-          </h3>
-          <div className="mt-2 space-y-1">
+        <ScrollArea className="flex-1 px-2">
+          <div className="space-y-1 py-2">
+            {starredChats.length > 0 && (
+              <>
+                {starredChats.map(chat => (
+                  <ChatItem
+                    key={chat.id}
+                    chat={chat}
+                    isActive={currentChat?.id === chat.id}
+                    onClick={() => setCurrentChat(chat.id)}
+                    onDelete={() => deleteChat(chat.id)}
+                    onStar={() => starChat(chat.id, false)}
+                    starred={true}
+                    compact={true}
+                  />
+                ))}
+                <div className="h-px bg-gray-800 my-2" />
+              </>
+            )}
+            
             {recentChats.map(chat => (
               <ChatItem
                 key={chat.id}
@@ -82,29 +85,59 @@ export function Sidebar({ onClose }: SidebarProps) {
                 onDelete={() => deleteChat(chat.id)}
                 onStar={() => starChat(chat.id, true)}
                 starred={false}
+                compact={true}
               />
             ))}
-            {recentChats.length === 0 && (
-              <div className="text-sm text-muted-foreground p-2">
-                No recent chats
+            {recentChats.length === 0 && starredChats.length === 0 && (
+              <div className="text-sm text-gray-500 p-2 text-center">
+                No chats yet
               </div>
             )}
           </div>
-        </div>
-      </ScrollArea>
-      
-      <div className="p-4 border-t border-border mt-auto">
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={() => setSettingsOpen(true)}>
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
+        </ScrollArea>
+        
+        <div className="mt-auto space-y-1 p-2">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="w-full justify-start text-gray-400 hover:text-white hover:bg-gray-800"
+          >
+            <ThumbsUp className="h-5 w-5" />
           </Button>
-          <ThemeToggle />
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="w-full justify-start text-gray-400 hover:text-white hover:bg-gray-800"
+          >
+            <ThumbsDown className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="w-full justify-start text-gray-400 hover:text-white hover:bg-gray-800"
+          >
+            <History className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="w-full justify-start text-gray-400 hover:text-white hover:bg-gray-800"
+          >
+            <HelpCircle className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={() => setSettingsOpen(true)}
+            className="w-full justify-start text-gray-400 hover:text-white hover:bg-gray-800"
+          >
+            <Settings className="h-5 w-5" />
+          </Button>
         </div>
-      </div>
+      </SidebarContent>
       
       <SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
-    </>
+    </SidebarBase>
   );
 }
 
@@ -119,67 +152,73 @@ interface ChatItemProps {
   onDelete: () => void;
   onStar: () => void;
   starred: boolean;
+  compact?: boolean;
 }
 
-function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatItemProps) {
+function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred, compact = false }: ChatItemProps) {
   return (
     <div
-      className={`group flex items-center justify-between rounded-md px-2 py-2 hover:bg-secondary ${
-        isActive ? "bg-secondary" : ""
+      className={`group flex items-center justify-between rounded-md px-2 py-2 hover:bg-gray-800 cursor-pointer ${
+        isActive ? "bg-gray-800" : ""
       }`}
+      onClick={onClick}
     >
-      <div className="flex items-center truncate flex-1" onClick={onClick}>
-        <MessageSquare className="h-4 w-4 mr-2 shrink-0 text-muted-foreground" />
-        <span className="truncate text-sm">{chat.title}</span>
+      <div className="flex items-center truncate flex-1">
+        <MessageSquare className="h-4 w-4 mr-2 shrink-0 text-gray-400" />
+        {!compact && (
+          <span className="truncate text-sm">{chat.title}</span>
+        )}
       </div>
       
-      <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onStar();
-                }}
-              >
-                <Star
-                  className={`h-4 w-4 ${
-                    starred ? "fill-yellow-400 text-yellow-400" : ""
-                  }`}
-                />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {starred ? "Remove star" : "Star chat"}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 text-destructive"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete();
-                }}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              Delete chat
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      {!compact && (
+        <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onStar();
+                  }}
+                >
+                  <Star
+                    className={`h-4 w-4 ${
+                      starred ? "fill-yellow-400 text-yellow-400" : ""
+                    }`}
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {starred ? "Remove star" : "Star chat"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-destructive"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Delete chat
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
     </div>
   );
 }
