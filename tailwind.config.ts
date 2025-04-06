@@ -56,6 +56,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: "hsl(var(--background))",
+          foreground: "hsl(var(--foreground))",
+          border: "hsl(var(--border))",
+          accent: "hsl(var(--secondary))",
+          "accent-foreground": "hsl(var(--secondary-foreground))",
+          ring: "hsl(var(--ring))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

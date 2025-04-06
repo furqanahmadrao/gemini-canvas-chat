@@ -18,15 +18,8 @@ export function SidebarHeader({ onClose }: SidebarHeaderProps) {
           variant="ghost" 
           size="icon" 
           onClick={onClose}
-          className="md:hidden rounded-full hover:bg-muted/80 transition-colors"
-        >
-          <XCircle className="h-5 w-5" />
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={onClose} 
-          className="hidden md:flex rounded-full hover:bg-muted/80 transition-colors"
+          className="rounded-full hover:bg-muted/80 transition-colors"
+          aria-label="Toggle sidebar"
         >
           <ChevronLeft className="h-5 w-5" />
         </Button>
