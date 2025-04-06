@@ -1,10 +1,10 @@
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 type Theme = "dark" | "light" | "system";
 
 type ThemeProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   defaultTheme?: Theme;
 };
 
@@ -44,7 +44,6 @@ export function ThemeProvider({
     }
 
     root.classList.add(theme);
-    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const value = {
