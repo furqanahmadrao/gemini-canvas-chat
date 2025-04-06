@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useChat } from "@/providers/ChatProvider";
 import {
@@ -27,12 +26,6 @@ export function Sidebar({ onClose }: SidebarProps) {
   const sortedChats = [...chats].sort((a, b) => b.updatedAt - a.updatedAt);
   const starredChats = sortedChats.filter(chat => chat.starred);
   const recentChats = sortedChats.filter(chat => !chat.starred);
-  
-  const handleClose = () => {
-    if (onClose) {
-      onClose();
-    }
-  };
 
   return (
     <>
@@ -42,7 +35,7 @@ export function Sidebar({ onClose }: SidebarProps) {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={handleClose}
+            onClick={onClose}
             className="md:hidden rounded-full hover:bg-muted/80 transition-colors"
           >
             <XCircle className="h-5 w-5" />
@@ -50,7 +43,7 @@ export function Sidebar({ onClose }: SidebarProps) {
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={handleClose} 
+            onClick={onClose} 
             className="hidden md:flex rounded-full hover:bg-muted/80 transition-colors"
           >
             <ChevronLeft className="h-5 w-5" />

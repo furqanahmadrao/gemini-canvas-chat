@@ -26,7 +26,7 @@ export function AppLayout() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0`}
       >
-        <Sidebar onClose={toggleSidebar} />
+        <Sidebar onClose={() => setSidebarOpen(false)} />
       </div>
 
       {/* Main content */}
