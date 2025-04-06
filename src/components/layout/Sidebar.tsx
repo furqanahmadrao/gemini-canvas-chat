@@ -28,24 +28,30 @@ export function Sidebar({ onClose }: SidebarProps) {
   const starredChats = sortedChats.filter(chat => chat.starred);
   const recentChats = sortedChats.filter(chat => !chat.starred);
   
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
     <>
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <h2 className="text-lg font-semibold">Gemini Chatbot</h2>
+      <div className="flex items-center justify-between p-4 border-b border-border/30">
+        <h2 className="text-lg font-semibold bg-gradient-to-r from-primary/90 to-primary text-primary-foreground bg-clip-text text-transparent">Gemini Chatbot</h2>
         <div className="flex items-center gap-2">
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={onClose} 
-            className="md:hidden"
+            onClick={handleClose}
+            className="md:hidden rounded-full hover:bg-muted/80 transition-colors"
           >
             <XCircle className="h-5 w-5" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={onClose} 
-            className="hidden md:flex"
+            onClick={handleClose} 
+            className="hidden md:flex rounded-full hover:bg-muted/80 transition-colors"
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
@@ -55,16 +61,16 @@ export function Sidebar({ onClose }: SidebarProps) {
       <div className="p-4">
         <Button 
           onClick={createNewChat} 
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md transition-all hover:shadow-lg"
         >
           <PlusCircle className="mr-2 h-4 w-4" /> New Chat
         </Button>
       </div>
       
-      <ScrollArea className="flex-1 rounded-md">
+      <ScrollArea className="flex-1 px-2">
         {starredChats.length > 0 && (
-          <div className="px-4 pb-2">
-            <h3 className="text-sm font-medium text-muted-foreground flex items-center">
+          <div className="px-2 pb-2">
+            <h3 className="text-sm font-medium text-muted-foreground flex items-center px-2 py-1">
               <Star className="mr-2 h-4 w-4" /> Starred Chats
             </h3>
             <div className="mt-2 space-y-1">
@@ -83,8 +89,8 @@ export function Sidebar({ onClose }: SidebarProps) {
           </div>
         )}
         
-        <div className="px-4 pb-2 mt-4">
-          <h3 className="text-sm font-medium text-muted-foreground flex items-center">
+        <div className="px-2 pb-2 mt-4">
+          <h3 className="text-sm font-medium text-muted-foreground flex items-center px-2 py-1">
             <MessageSquare className="mr-2 h-4 w-4" /> Recent Chats
           </h3>
           <div className="mt-2 space-y-1">
@@ -100,7 +106,7 @@ export function Sidebar({ onClose }: SidebarProps) {
               />
             ))}
             {recentChats.length === 0 && (
-              <div className="text-sm text-muted-foreground p-2 rounded-md bg-secondary/50">
+              <div className="text-sm text-muted-foreground p-3 rounded-lg bg-muted/30 text-center">
                 No recent chats
               </div>
             )}
@@ -108,9 +114,14 @@ export function Sidebar({ onClose }: SidebarProps) {
         </div>
       </ScrollArea>
       
-      <div className="p-4 border-t border-border mt-auto">
+      <div className="p-4 border-t border-border/30 mt-auto">
         <div className="flex items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={() => setSettingsOpen(true)} className="rounded-lg">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setSettingsOpen(true)} 
+            className="rounded-lg hover:bg-muted/80 transition-colors"
+          >
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
@@ -139,12 +150,12 @@ interface ChatItemProps {
 function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatItemProps) {
   return (
     <div
-      className={`group flex items-center justify-between rounded-lg px-2 py-2 hover:bg-secondary ${
-        isActive ? "bg-secondary" : ""
+      className={`group flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-muted/80 transition-all ${
+        isActive ? "bg-muted shadow-sm" : ""
       }`}
     >
       <div className="flex items-center truncate flex-1 cursor-pointer" onClick={onClick}>
-        <MessageSquare className="h-4 w-4 mr-2 shrink-0 text-muted-foreground" />
+        <MessageSquare className="h-4 w-4 mr-2.5 shrink-0 text-muted-foreground" />
         <span className="truncate text-sm">{chat.title}</span>
       </div>
       
@@ -155,20 +166,20 @@ function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatIt
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 rounded-md"
+                className="h-7 w-7 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   onStar();
                 }}
               >
                 <Star
-                  className={`h-4 w-4 ${
+                  className={`h-3.5 w-3.5 ${
                     starred ? "fill-yellow-400 text-yellow-400" : ""
                   }`}
                 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent side="bottom">
               {starred ? "Remove star" : "Star chat"}
             </TooltipContent>
           </Tooltip>
@@ -180,16 +191,16 @@ function ChatItem({ chat, isActive, onClick, onDelete, onStar, starred }: ChatIt
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 rounded-md text-destructive"
+                className="h-7 w-7 rounded-full text-destructive hover:bg-destructive/10"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
                 }}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent side="bottom">
               Delete chat
             </TooltipContent>
           </Tooltip>
