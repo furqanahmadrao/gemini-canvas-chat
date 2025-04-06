@@ -3,17 +3,13 @@ import React from "react";
 import { MessageSquare, Star } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatItem } from "./ChatItem";
+import { Chat as ChatType } from "@/providers/ChatProvider";
 
-interface Chat {
-  id: string;
-  title: string;
-  updatedAt: number;
-  starred: boolean;
-}
+type Chat = ChatType;
 
 interface ChatListProps {
   chats: Chat[];
-  currentChat?: Chat;
+  currentChat?: Chat | null;
   setCurrentChat: (id: string) => void;
   deleteChat: (id: string) => void;
   starChat: (id: string, starred: boolean) => void;

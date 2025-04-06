@@ -3,13 +3,12 @@ import React from "react";
 import { MessageSquare, Star, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Chat as ChatType } from "@/providers/ChatProvider";
+
+type Chat = Pick<ChatType, "id" | "title" | "updatedAt">;
 
 interface ChatItemProps {
-  chat: {
-    id: string;
-    title: string;
-    updatedAt: number;
-  };
+  chat: Chat;
   isActive: boolean;
   onClick: () => void;
   onDelete: () => void;
