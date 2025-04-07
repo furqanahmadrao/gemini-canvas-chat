@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarInset, useSidebar } from "@/components/ui/sidebar";
 import { Chat } from "../chat/Chat";
-import { Menu, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ApiKeyModal } from "../modals/ApiKeyModal";
 import { useSettings } from "@/providers/SettingsProvider";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
@@ -12,23 +10,6 @@ import { ChatList } from "./sidebar/ChatList";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
-
-// Single floating toggle button that's always visible
-const FloatingToggleButton = () => {
-  const { toggleSidebar, open } = useSidebar();
-  
-  return (
-    <Button
-      variant="secondary"
-      size="icon"
-      onClick={toggleSidebar}
-      className="fixed left-0 top-20 z-50 rounded-l-none shadow-md animate-fade-in"
-      aria-label="Toggle sidebar"
-    >
-      <ChevronRight className={`h-5 w-5 transition-transform ${open ? 'rotate-180' : ''}`} />
-    </Button>
-  );
-};
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -60,10 +41,7 @@ export function AppLayout() {
 
         {/* Main content */}
         <SidebarInset>
-          {/* Single floating toggle button that's always visible */}
-          <FloatingToggleButton />
-          
-          {/* Top bar - removing the toggle button from here */}
+          {/* Top bar - without any toggle button */}
           <header className="flex items-center justify-between p-4 border-b border-border">
             <div className="text-lg font-medium ml-2 md:ml-0">Gemini Chatbot</div>
             <div className="flex items-center space-x-2">
