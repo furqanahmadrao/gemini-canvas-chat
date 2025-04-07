@@ -13,7 +13,7 @@ import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
 
-// Floating toggle button that's always visible
+// Single floating toggle button that's always visible
 const FloatingToggleButton = () => {
   const { toggleSidebar, open } = useSidebar();
   
@@ -39,17 +39,13 @@ export function AppLayout() {
   // Check if the API key is set
   const isApiKeySet = !!settings.apiKey;
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   return (
     <SidebarProvider defaultOpen={true} open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex h-screen w-full bg-background">
         {/* Sidebar - using shadcn/ui sidebar component */}
         <Sidebar>
           <SidebarContent>
-            <SidebarHeader onClose={toggleSidebar} />
+            <SidebarHeader />
             <NewChatButton onClick={createNewChat} />
             <ChatList 
               chats={chats}
@@ -64,19 +60,11 @@ export function AppLayout() {
 
         {/* Main content */}
         <SidebarInset>
-          {/* Floating toggle button that's always visible */}
+          {/* Single floating toggle button that's always visible */}
           <FloatingToggleButton />
           
-          {/* Top bar with menu toggle */}
+          {/* Top bar - removing the toggle button from here */}
           <header className="flex items-center justify-between p-4 border-b border-border">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-              className="md:hidden rounded-full hover:bg-primary/10"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
             <div className="text-lg font-medium ml-2 md:ml-0">Gemini Chatbot</div>
             <div className="flex items-center space-x-2">
               {/* This space can be used for additional header controls */}
