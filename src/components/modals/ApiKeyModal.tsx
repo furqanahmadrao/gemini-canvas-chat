@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,13 +12,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/providers/SettingsProvider";
 import { useToast } from "@/hooks/use-toast";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Eye, EyeOff } from "lucide-react";
 
 export function ApiKeyModal() {
   const { settings, updateSettings } = useSettings();
   const { toast } = useToast();
   const [apiKey, setApiKey] = useState("");
   const [open, setOpen] = useState(true);
+  const [showApiKey, setShowApiKey] = useState(false);
+
+  useEffect(() => {
+    // Close modal if API key is already set
+    if (settings.apiKey) {
+      setOpen(false);
+    }
+  }, [settings.apiKey]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +41,7 @@ export function ApiKeyModal() {
     }
     
     // Store the API key
-    updateSettings("apiKey", apiKey);
+    updateSettings("apiKey", apiKey.trim());
     
     toast({
       title: "API key saved",
@@ -61,12 +69,24 @@ export function ApiKeyModal() {
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            placeholder="Enter your API key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="w-full"
-          />
+          <div className="relative">
+            <Input
+              placeholder="Enter your API key"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              type={showApiKey ? "text" : "password"}
+              className="pr-10"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2"
+              onClick={() => setShowApiKey(!showApiKey)}
+            >
+              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Button>
+          </div>
           
           <div className="text-sm text-muted-foreground">
             <p>Don't have an API key?</p>

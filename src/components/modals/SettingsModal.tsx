@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,20 +23,40 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Check, Copy, Eye, EyeOff } from "lucide-react";
 
 interface SettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
+const settingsFormSchema = z.object({
+  apiKey: z.string().min(1, "API key is required"),
+});
+
+type SettingsFormValues = z.infer<typeof settingsFormSchema>;
+
 export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   const { settings, updateSettings } = useSettings();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
-  const [apiKey, setApiKey] = React.useState(settings.apiKey || "");
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
-  const handleSaveApiKey = () => {
-    updateSettings("apiKey", apiKey);
+  // Initialize form with current API key
+  const form = useForm<SettingsFormValues>({
+    resolver: zodResolver(settingsFormSchema),
+    defaultValues: {
+      apiKey: settings.apiKey || "",
+    },
+  });
+
+  const handleSaveApiKey = (values: SettingsFormValues) => {
+    updateSettings("apiKey", values.apiKey);
     toast({
       title: "API key saved",
       description: "Your Gemini API key has been updated",
@@ -44,12 +64,28 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   };
 
   const handleClearApiKey = () => {
-    setApiKey("");
+    form.setValue("apiKey", "");
     updateSettings("apiKey", null);
     toast({
       title: "API key cleared",
       description: "Your Gemini API key has been removed",
     });
+  };
+
+  const copyApiKey = () => {
+    if (settings.apiKey) {
+      navigator.clipboard.writeText(settings.apiKey);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+      toast({
+        title: "Copied",
+        description: "API key copied to clipboard",
+      });
+    }
+  };
+
+  const toggleShowApiKey = () => {
+    setShowApiKey(!showApiKey);
   };
 
   return (
@@ -70,25 +106,71 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
           </TabsList>
           
           <TabsContent value="api-key" className="space-y-4">
-            <div>
-              <Label htmlFor="api-key">Gemini API Key</Label>
-              <Input
-                id="api-key"
-                value={apiKey || ""}
-                onChange={(e) => setApiKey(e.target.value)}
-                type="password"
-                placeholder="Enter your API key"
-                className="mt-1"
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                Your API key is stored locally in your browser's storage.
-              </p>
-            </div>
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={handleClearApiKey}>
-                Clear API Key
-              </Button>
-              <Button onClick={handleSaveApiKey}>Save API Key</Button>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSaveApiKey)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="apiKey"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gemini API Key</FormLabel>
+                      <div className="flex space-x-2">
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              type={showApiKey ? "text" : "password"}
+                              placeholder="Enter your API key"
+                              className="pr-10"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-0 top-0 h-full"
+                              onClick={toggleShowApiKey}
+                            >
+                              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </Button>
+                          </div>
+                        </FormControl>
+                        {settings.apiKey && (
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="outline"
+                            onClick={copyApiKey}
+                            title="Copy API key"
+                          >
+                            {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                          </Button>
+                        )}
+                      </div>
+                      <FormDescription>
+                        Your API key is stored locally in your browser's storage.
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-between">
+                  <Button type="button" variant="outline" onClick={handleClearApiKey}>
+                    Clear API Key
+                  </Button>
+                  <Button type="submit">Save API Key</Button>
+                </div>
+              </form>
+            </Form>
+
+            <div className="text-sm text-muted-foreground mt-4 border-t pt-4">
+              <p>Don't have an API key?</p>
+              <a 
+                href="https://aistudio.google.com/app/apikey" 
+                target="_blank" 
+                rel="noreferrer"
+                className="text-primary hover:underline"
+              >
+                Get a Gemini API key from Google AI Studio
+              </a>
             </div>
           </TabsContent>
           
@@ -155,10 +237,10 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                   <SelectValue placeholder="Select model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
-                  <SelectItem value="gemini-pro-vision">Gemini Pro Vision</SelectItem>
-                  <SelectItem value="gemini-ultra">Gemini Ultra</SelectItem>
-                  <SelectItem value="gemini-flash">Gemini Flash</SelectItem>
+                  <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
+                  <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash</SelectItem>
+                  <SelectItem value="gemini-1.0-pro">Gemini 1.0 Pro</SelectItem>
+                  <SelectItem value="gemini-1.0-pro-vision">Gemini 1.0 Pro Vision</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-sm text-muted-foreground mt-1">
@@ -193,6 +275,36 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                 onValueChange={(value) => updateSettings("maxTokens", value[0])}
                 className="mt-2"
               />
+            </div>
+            
+            <div>
+              <Label>Top K: {settings.topK}</Label>
+              <Slider
+                value={[settings.topK]}
+                min={1}
+                max={100}
+                step={1}
+                onValueChange={(value) => updateSettings("topK", value[0])}
+                className="mt-2"
+              />
+              <p className="text-sm text-muted-foreground mt-1">
+                Limits token selection to the top K options at each step.
+              </p>
+            </div>
+            
+            <div>
+              <Label>Top P: {settings.topP}</Label>
+              <Slider
+                value={[settings.topP]}
+                min={0.1}
+                max={1}
+                step={0.05}
+                onValueChange={(value) => updateSettings("topP", value[0])}
+                className="mt-2"
+              />
+              <p className="text-sm text-muted-foreground mt-1">
+                Limits token selection to a subset that adds up to a probability of Top P.
+              </p>
             </div>
             
             <div className="flex items-center justify-between">

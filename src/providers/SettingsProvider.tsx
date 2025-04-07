@@ -2,13 +2,19 @@
 import React, { createContext, useContext } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-export type AIModel = "gemini-pro" | "gemini-pro-vision" | "gemini-ultra" | "gemini-flash";
+export type AIModel = 
+  | "gemini-1.0-pro" 
+  | "gemini-1.0-pro-vision" 
+  | "gemini-1.5-pro" 
+  | "gemini-1.5-flash";
 
 interface Settings {
   apiKey: string | null;
   model: AIModel;
   temperature: number;
   maxTokens: number;
+  topK: number;
+  topP: number;
   messageLayout: "default" | "compact";
   textSize: "small" | "medium" | "large";
   statelessMode: boolean;
@@ -22,9 +28,11 @@ interface SettingsContextType {
 
 const defaultSettings: Settings = {
   apiKey: null,
-  model: "gemini-pro",
+  model: "gemini-1.5-pro",
   temperature: 0.7,
   maxTokens: 1024,
+  topK: 40,
+  topP: 0.95,
   messageLayout: "default",
   textSize: "medium",
   statelessMode: false,

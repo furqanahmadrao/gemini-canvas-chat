@@ -27,7 +27,7 @@ interface ChatContextType {
   saveChat: (chat: Chat) => void;
   deleteChat: (chatId: string) => void;
   setCurrentChat: (chatId: string) => void;
-  addMessage: (message: Omit<Message, "id" | "timestamp">) => void;
+  addMessage: (message: Omit<Message, "id" | "timestamp">) => Message;
   updateMessage: (messageId: string, content: string) => void;
   deleteMessage: (messageId: string) => void;
   starChat: (chatId: string, starred: boolean) => void;
@@ -83,7 +83,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   };
 
   const addMessage = (message: Omit<Message, "id" | "timestamp">) => {
-    if (!currentChat) return;
+    if (!currentChat) return {} as Message;
 
     const newMessage: Message = {
       ...message,
@@ -138,7 +138,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     );
   };
 
-  // This function will call the Gemini API with the user's message and stream the response
+  // This function will call the Gemini API with the user's message
   const sendMessage = async (message: string) => {
     if (!settings.apiKey) {
       toast({
@@ -168,52 +168,76 @@ export function ChatProvider({ children }: ChatProviderProps) {
     setIsLoading(true);
 
     try {
-      // Simulate the API call but mention the selected model
-      const response = await simulateStreamingResponse(message, settings.model, (partialResponse) => {
-        updateMessage(aiMessage!.id, partialResponse);
-      });
+      const modelId = settings.model;
+      console.log(`Using model: ${modelId}`);
+
+      // Get conversation history for context if not in stateless mode
+      let conversationHistory: { role: string, parts: { text: string }[] }[] = [];
       
-      // Final update with complete response
-      updateMessage(aiMessage!.id, response);
+      if (!settings.statelessMode && currentChat) {
+        // Format previous messages for the API
+        // Maximum of 10 previous messages to prevent context length issues
+        const previousMessages = currentChat.messages
+          .slice(-10) // Last 10 messages
+          .filter(msg => msg.id !== aiMessage.id && msg.id !== userMessage.id);
+        
+        conversationHistory = previousMessages.map(msg => ({
+          role: msg.role === "user" ? "user" : "model",
+          parts: [{ text: msg.content }]
+        }));
+      }
+
+      // Call the Google Generative AI API
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${settings.apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            ...conversationHistory,
+            {
+              role: "user",
+              parts: [{ text: message }]
+            }
+          ],
+          generationConfig: {
+            temperature: settings.temperature,
+            maxOutputTokens: settings.maxTokens,
+            topK: settings.topK,
+            topP: settings.topP,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Error calling Gemini API');
+      }
+
+      const data = await response.json();
+      
+      if (data.candidates && data.candidates.length > 0) {
+        const responseText = data.candidates[0].content.parts
+          .map((part: { text?: string }) => part.text || '')
+          .join('');
+        
+        updateMessage(aiMessage.id, responseText);
+      } else {
+        throw new Error('No response from the model');
+      }
     } catch (error) {
       console.error("Error sending message:", error);
       toast({
         title: "Error",
-        description: "Failed to get a response from Gemini. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to get a response from Gemini",
         variant: "destructive",
       });
-      // Update AI message to show error
-      updateMessage(aiMessage!.id, "I'm sorry, I encountered an error while processing your request.");
+      
+      updateMessage(aiMessage.id, "I'm sorry, I encountered an error while processing your request.");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Simulate streaming response with model information
-  const simulateStreamingResponse = async (
-    message: string, 
-    model: string,
-    onPartialResponse: (text: string) => void
-  ): Promise<string> => {
-    const responses = [
-      `I'm analyzing your question using ${model}...`,
-      "Based on my understanding, here's what I can tell you:",
-      "This is a simulated response from the Gemini API. In a real implementation, this would be streaming from the API.",
-      "Your message was: " + message,
-      "\n\nYou can provide your actual Gemini API key in settings to get real responses.",
-      `\n\nCurrently using model: ${model}`,
-      "\n\nSome things you can try:\n- Ask me about code\n- Request information on a topic\n- Ask me to write something creative",
-    ];
-    
-    let fullResponse = "";
-    
-    for (const part of responses) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      fullResponse += " " + part;
-      onPartialResponse(fullResponse);
-    }
-    
-    return fullResponse;
   };
 
   // Effect to create a new chat if none exists
