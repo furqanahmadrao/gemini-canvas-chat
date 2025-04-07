@@ -12,7 +12,9 @@ export function NewChatButton({ onClick }: NewChatButtonProps) {
     <div className="p-4">
       <Button 
         onClick={onClick} 
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md transition-all hover:shadow-lg"
+        className="w-full bg-gradient-to-r from-primary/80 to-primary hover:from-primary/90 hover:to-primary/90 text-primary-foreground rounded-full shadow-sm transition-all hover:shadow-md"
+        title="Create a new chat"
+        aria-label="Create a new chat"
       >
         <PlusCircle className="mr-2 h-4 w-4" /> New Chat
       </Button>

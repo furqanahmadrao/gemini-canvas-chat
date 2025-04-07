@@ -11,21 +11,28 @@ import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Fixed toggle button component that's always visible
 const FixedToggleButton = () => {
   const { toggleSidebar, open } = useSidebar();
+  const isMobile = useIsMobile();
   
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={toggleSidebar}
-      className="fixed left-0 top-4 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border"
+      className="fixed left-0 top-4 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border transition-all hover:bg-secondary/80"
       aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+      tabIndex={0}
+      title={open ? "Collapse sidebar" : "Expand sidebar"}
     >
-      <ChevronLeft className={`h-5 w-5 transition-transform ${open ? '' : 'rotate-180'}`} />
+      {open ? 
+        <ChevronLeft className="h-5 w-5 transition-transform" /> : 
+        <ChevronRight className="h-5 w-5 transition-transform" />
+      }
     </Button>
   );
 };
@@ -35,12 +42,20 @@ export function AppLayout() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { settings } = useSettings();
   const { chats, currentChat, createNewChat, deleteChat, setCurrentChat, starChat } = useChat();
+  const isMobile = useIsMobile();
 
   // Check if the API key is set
   const isApiKeySet = !!settings.apiKey;
 
+  // Close sidebar by default on mobile
+  React.useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile]);
+
   return (
-    <SidebarProvider defaultOpen={true} open={sidebarOpen} onOpenChange={setSidebarOpen}>
+    <SidebarProvider defaultOpen={!isMobile} open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex h-screen w-full bg-background">
         {/* Fixed toggle button that's always visible */}
         <FixedToggleButton />
