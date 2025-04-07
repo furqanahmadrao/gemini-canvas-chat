@@ -10,6 +10,25 @@ import { ChatList } from "./sidebar/ChatList";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+
+// Fixed toggle button component that's always visible
+const FixedToggleButton = () => {
+  const { toggleSidebar, open } = useSidebar();
+  
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleSidebar}
+      className="fixed left-0 top-4 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border"
+      aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+    >
+      <ChevronLeft className={`h-5 w-5 transition-transform ${open ? '' : 'rotate-180'}`} />
+    </Button>
+  );
+};
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -23,6 +42,9 @@ export function AppLayout() {
   return (
     <SidebarProvider defaultOpen={true} open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex h-screen w-full bg-background">
+        {/* Fixed toggle button that's always visible */}
+        <FixedToggleButton />
+        
         {/* Sidebar - using shadcn/ui sidebar component */}
         <Sidebar>
           <SidebarContent>
