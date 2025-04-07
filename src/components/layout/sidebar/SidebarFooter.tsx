@@ -55,12 +55,15 @@ export function SidebarFooter({ onSettingsClick }: SidebarFooterProps) {
                   size="icon" 
                   className="rounded-lg hover:bg-muted/80 transition-colors h-8 w-8"
                   aria-label="GitHub Repository"
-                  as="a"
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  asChild
                 >
-                  <Github className="h-4 w-4" />
+                  <a 
+                    href="https://github.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    <Github className="h-4 w-4" />
+                  </a>
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top">GitHub Repository</TooltipContent>
