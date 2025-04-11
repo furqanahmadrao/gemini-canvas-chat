@@ -22,13 +22,13 @@ export function UserMessage({ message }: UserMessageProps) {
           </time>
           <span className="text-sm font-medium ml-2">You</span>
         </div>
-        <div className="message-bubble-user">
+        <div className="message-bubble-user shadow-md transition-all hover:shadow-lg">
           {message.content}
         </div>
       </div>
       
-      <Avatar className="w-8 h-8">
-        <AvatarFallback>U</AvatarFallback>
+      <Avatar className="w-10 h-10 ring-2 ring-primary/20">
+        <AvatarFallback className="bg-primary/10 text-primary font-medium">U</AvatarFallback>
         <AvatarImage src="https://github.com/shadcn.png" />
       </Avatar>
     </div>

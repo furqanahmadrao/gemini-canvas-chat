@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import { useChat } from "@/providers/ChatProvider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Paperclip, Send, Mic, Square } from "lucide-react";
+import { Paperclip, Send, Mic, Square, Image, Palette, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function MessageInput() {
@@ -28,7 +28,6 @@ export function MessageInput() {
     }
   };
 
-  // Auto-resize the textarea
   const handleInput = () => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -37,7 +36,6 @@ export function MessageInput() {
     }
   };
 
-  // Handle file attachment
   const handleFileAttachment = () => {
     fileInputRef.current?.click();
   };
@@ -45,22 +43,17 @@ export function MessageInput() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // For now, just show a toast notification
       toast({
         title: "File attached",
         description: `${file.name} (${Math.round(file.size / 1024)} KB)`,
       });
       
-      // Clear the input for future selections
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      
-      // In a real implementation, we would handle the file upload logic here
     }
   };
 
-  // Handle voice recording
   const toggleVoiceRecording = () => {
     if (isRecording) {
       stopRecording();
@@ -71,15 +64,12 @@ export function MessageInput() {
 
   const startRecording = async () => {
     try {
-      // Request microphone permissions
       await navigator.mediaDevices.getUserMedia({ audio: true });
       setIsRecording(true);
       toast({
         title: "Recording started",
         description: "Speak now. Click the button again to stop recording.",
       });
-      
-      // In a real implementation, we would start recording here
     } catch (error) {
       toast({
         title: "Error",
@@ -96,7 +86,6 @@ export function MessageInput() {
       description: "Processing your audio...",
     });
     
-    // Simulate processing time
     setTimeout(() => {
       setMessage(message + " [Voice transcript would appear here]");
       toast({
@@ -104,20 +93,31 @@ export function MessageInput() {
         description: "Your voice has been transcribed.",
       });
     }, 1500);
-    
-    // In a real implementation, we would stop recording and process the audio here
   };
 
   return (
-    <div className="flex items-end gap-2 bg-card border border-border rounded-lg p-2">
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="shrink-0" 
-        onClick={handleFileAttachment}
-      >
-        <Paperclip className="h-5 w-5" />
-      </Button>
+    <div className="flex items-end gap-2 neo-effect border border-border/30 rounded-2xl p-3 shadow-lg">
+      <div className="flex gap-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="shrink-0 rounded-xl hover:bg-secondary/80 hover:text-primary" 
+          onClick={handleFileAttachment}
+          title="Attach file"
+        >
+          <Paperclip className="h-5 w-5" />
+        </Button>
+        
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="shrink-0 rounded-xl hover:bg-secondary/80 hover:text-primary" 
+          onClick={() => toast({ description: "Image upload coming soon!" })}
+          title="Attach image"
+        >
+          <Image className="h-5 w-5" />
+        </Button>
+      </div>
       
       <input
         type="file"
@@ -129,12 +129,12 @@ export function MessageInput() {
       
       <Textarea
         ref={textareaRef}
-        placeholder="Message Gemini..."
+        placeholder="Type your message to Gemini..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         onInput={handleInput}
-        className="min-h-10 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="min-h-10 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
         disabled={isLoading || isRecording}
       />
       
@@ -142,8 +142,9 @@ export function MessageInput() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className={`shrink-0 ${isRecording ? 'bg-red-500 text-white hover:bg-red-600' : ''}`}
+          className={`shrink-0 rounded-xl ${isRecording ? 'bg-red-500 text-white hover:bg-red-600 pulse-effect' : 'hover:bg-secondary/80 hover:text-primary'}`}
           onClick={toggleVoiceRecording}
+          title={isRecording ? "Stop recording" : "Start voice recording"}
         >
           {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-5 w-5" />}
         </Button>
@@ -151,7 +152,8 @@ export function MessageInput() {
         <Button
           onClick={handleSendMessage}
           disabled={!message.trim() || isLoading || isRecording}
-          className="shrink-0"
+          className="shrink-0 bg-primary hover:bg-primary/90 rounded-xl hover-scale shadow-md"
+          title="Send message"
         >
           <Send className="h-5 w-5" />
         </Button>

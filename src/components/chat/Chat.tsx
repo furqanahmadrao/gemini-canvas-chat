@@ -21,30 +21,25 @@ export function Chat() {
   };
 
   const handleScroll = () => {
-    // Calculate the scroll position using the scroll area ref
     if (!scrollAreaRef.current) return;
     
     const scrollArea = scrollAreaRef.current;
     const { scrollTop, scrollHeight, clientHeight } = scrollArea;
     
-    // Show scroll button when not at the bottom
     const isAtBottom = Math.abs((scrollTop + clientHeight) - scrollHeight) < 50;
     setShowScrollButton(!isAtBottom);
   };
   
-  // Auto scroll to bottom when a new message is added
   useEffect(() => {
     if (currentChat && !showScrollButton) {
       scrollToBottom();
     }
   }, [currentChat?.messages, showScrollButton]);
 
-  // Always scroll to bottom when chat changes
   useEffect(() => {
     scrollToBottom();
   }, [currentChat?.id]);
 
-  // Add scroll event listener
   useEffect(() => {
     const scrollAreaElement = scrollAreaRef.current;
     if (scrollAreaElement) {
@@ -67,21 +62,23 @@ export function Chat() {
 
   return (
     <div className="flex flex-col h-full relative">
-      {/* Chat messages area */}
-      <ScrollArea 
-        ref={scrollAreaRef}
-        className="flex-1"
-      >
-        <div className={`p-4 pb-24 ${textSizeClasses[settings.textSize]}`}>
-          <MessageList messages={currentChat.messages} />
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
+      {/* Chat messages area with glassmorphism effect */}
+      <div className="flex-1 rounded-2xl glass-effect m-2 overflow-hidden">
+        <ScrollArea 
+          ref={scrollAreaRef}
+          className="h-full"
+        >
+          <div className={`p-6 pb-24 ${textSizeClasses[settings.textSize]}`}>
+            <MessageList messages={currentChat.messages} />
+            <div ref={messagesEndRef} />
+          </div>
+        </ScrollArea>
+      </div>
       
       {/* Scroll to bottom button */}
       {showScrollButton && (
         <Button
-          className="absolute bottom-24 right-4 rounded-full"
+          className="absolute bottom-24 right-6 rounded-full shadow-lg hover-glow"
           size="icon"
           onClick={scrollToBottom}
           variant="secondary"
@@ -90,11 +87,11 @@ export function Chat() {
         </Button>
       )}
       
-      {/* Loading indicator */}
+      {/* Loading indicator with improved animation */}
       {isLoading && (
-        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 bg-accent/80 py-1 px-4 rounded-full flex items-center space-x-2">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <span className="text-sm">Thinking...</span>
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 glass-effect py-2 px-5 rounded-full flex items-center space-x-2 shadow-lg">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm font-medium">Thinking...</span>
         </div>
       )}
       

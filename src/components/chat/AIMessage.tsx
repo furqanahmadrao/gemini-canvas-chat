@@ -28,22 +28,22 @@ export function AIMessage({ message }: AIMessageProps) {
   
   return (
     <div className="flex items-start gap-3">
-      <Avatar className="w-8 h-8">
-        <AvatarFallback>AI</AvatarFallback>
-        <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=gemini" />
+      <Avatar className="w-10 h-10 ring-2 ring-primary/20">
+        <AvatarFallback className="bg-primary/10 text-primary">AI</AvatarFallback>
+        <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=gemini&backgroundColor=6366f1" />
       </Avatar>
       
       <div className="flex flex-col">
         <div className="flex items-center mb-1">
-          <span className="text-sm font-medium">Gemini</span>
+          <span className="text-sm font-medium bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">Gemini</span>
           <time className="text-xs text-muted-foreground ml-2">
             {formatDistanceToNow(message.timestamp, { addSuffix: true })}
           </time>
         </div>
         
-        <div className="message-bubble-ai">
+        <div className="message-bubble-ai shadow-md transition-all hover:shadow-lg">
           {isTyping ? (
-            <div className="flex space-x-1">
+            <div className="flex items-center space-x-2 py-2">
               <div className="typing-dot"></div>
               <div className="typing-dot"></div>
               <div className="typing-dot"></div>
@@ -54,16 +54,19 @@ export function AIMessage({ message }: AIMessageProps) {
                 code({node, inline, className, children, ...props}: CodeProps) {
                   const match = /language-(\w+)/.exec(className || '')
                   return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={vscDarkPlus}
-                      language={match[1]}
-                      PreTag="div"
-                      {...props}
-                    >
-                      {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
+                    <div className="my-2 rounded-lg overflow-hidden shadow-lg">
+                      <SyntaxHighlighter
+                        style={vscDarkPlus}
+                        language={match[1]}
+                        PreTag="div"
+                        className="!bg-gray-800 !rounded-lg"
+                        {...props}
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
+                    </div>
                   ) : (
-                    <code className="bg-secondary/50 px-1 py-0.5 rounded" {...props}>
+                    <code className="bg-secondary/70 px-1.5 py-0.5 rounded-md font-mono text-sm" {...props}>
                       {children}
                     </code>
                   )
