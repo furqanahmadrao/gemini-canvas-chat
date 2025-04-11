@@ -80,7 +80,7 @@ export function AppLayout() {
         <SidebarInset>
           {/* Top bar - without any toggle button */}
           <header className="flex items-center justify-between p-4 border-b border-border">
-            <div className="text-lg font-medium ml-8 md:ml-8">Gemini Chatbot</div>
+            <div className="text-lg font-medium ml-8 md:ml-8">Mind Labs</div>
             <div className="flex items-center space-x-2">
               {/* This space can be used for additional header controls */}
             </div>
