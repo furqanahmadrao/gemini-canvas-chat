@@ -122,4 +122,27 @@
   .typing-dot:nth-child(3) {
     animation-delay: 0.4s;
   }
+  
+  /* Sparkle animation for Mind Labs title */
+  @keyframes sparkle {
+    0% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0.4; transform: scale(0.8); }
+  }
+  
+  .sparkle-icon {
+    animation: sparkle 2s infinite ease-in-out;
+  }
+  
+  /* Gradient animation for text */
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .gradient-text {
+    background-size: 200% auto;
+    animation: gradient-shift 3s ease infinite;
+  }
 }

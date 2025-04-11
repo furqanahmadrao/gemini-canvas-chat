@@ -11,8 +11,9 @@ import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
 
 // Fixed toggle button component that's always visible
 const FixedToggleButton = () => {
@@ -78,11 +79,16 @@ export function AppLayout() {
 
         {/* Main content */}
         <SidebarInset>
-          {/* Top bar - without any toggle button */}
+          {/* Top bar with attractive "Mind Labs" title */}
           <header className="flex items-center justify-between p-4 border-b border-border">
-            <div className="text-lg font-medium ml-8 md:ml-8">Mind Labs</div>
+            <div className="text-lg font-semibold ml-8 md:ml-8 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                Mind Labs
+              </span>
+            </div>
             <div className="flex items-center space-x-2">
-              {/* This space can be used for additional header controls */}
+              <CustomInstructionsButton />
             </div>
           </header>
 

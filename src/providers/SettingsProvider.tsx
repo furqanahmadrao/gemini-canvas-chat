@@ -18,6 +18,7 @@ interface Settings {
   messageLayout: "default" | "compact";
   textSize: "small" | "medium" | "large";
   statelessMode: boolean;
+  customInstructions: string | null;
 }
 
 interface SettingsContextType {
@@ -36,6 +37,7 @@ const defaultSettings: Settings = {
   messageLayout: "default",
   textSize: "medium",
   statelessMode: false,
+  customInstructions: null,
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
