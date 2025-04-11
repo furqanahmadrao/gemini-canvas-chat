@@ -11,28 +11,27 @@ import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, MenuIcon, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
 
 // Fixed toggle button component that's always visible
 const FixedToggleButton = () => {
   const { toggleSidebar, open } = useSidebar();
-  const isMobile = useIsMobile();
   
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={toggleSidebar}
-      className="fixed left-0 top-2 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border transition-all hover:bg-secondary/80"
+      className="fixed left-0 top-2 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border/50 transition-all hover:bg-secondary/80 h-10 w-10"
       aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
       tabIndex={0}
       title={open ? "Collapse sidebar" : "Expand sidebar"}
     >
       {open ? 
-        <ChevronLeft className="h-5 w-5 transition-transform" /> : 
-        <ChevronRight className="h-5 w-5 transition-transform" />
+        <ChevronLeft className="h-5 w-5" /> : 
+        <MenuIcon className="h-5 w-5" />
       }
     </Button>
   );
@@ -81,9 +80,9 @@ export function AppLayout() {
         <SidebarInset>
           {/* Top bar with attractive "Mind Labs" title */}
           <header className="flex items-center justify-between p-4 border-b border-border">
-            <div className="text-lg font-semibold ml-8 md:ml-8 flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+            <div className="text-lg font-semibold ml-12 md:ml-12 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary sparkle-icon" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 gradient-text">
                 Mind Labs
               </span>
             </div>
