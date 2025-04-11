@@ -13,11 +13,7 @@ export function SidebarHeader({ onClose }: SidebarHeaderProps) {
 
   return (
     <div className="flex flex-col space-y-2 p-4 border-b border-border/30">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold bg-gradient-to-r from-primary/90 to-primary text-primary-foreground bg-clip-text text-transparent">
-          Gemini Chatbot
-        </h2>
-        
+      <div className="flex items-center justify-end">
         <button 
           onClick={() => setSearchVisible(!searchVisible)}
           className="rounded-full p-1.5 hover:bg-secondary/80 transition-colors"

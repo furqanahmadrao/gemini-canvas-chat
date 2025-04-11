@@ -24,7 +24,7 @@ const FixedToggleButton = () => {
       variant="ghost"
       size="icon"
       onClick={toggleSidebar}
-      className="fixed left-0 top-4 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border transition-all hover:bg-secondary/80"
+      className="fixed left-0 top-2 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border transition-all hover:bg-secondary/80"
       aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
       tabIndex={0}
       title={open ? "Collapse sidebar" : "Expand sidebar"}
@@ -80,7 +80,7 @@ export function AppLayout() {
         <SidebarInset>
           {/* Top bar - without any toggle button */}
           <header className="flex items-center justify-between p-4 border-b border-border">
-            <div className="text-lg font-medium ml-2 md:ml-0">Gemini Chatbot</div>
+            <div className="text-lg font-medium ml-8 md:ml-8">Gemini Chatbot</div>
             <div className="flex items-center space-x-2">
               {/* This space can be used for additional header controls */}
             </div>
