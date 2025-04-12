@@ -40,10 +40,10 @@ const FixedToggleButton = () => {
       {/* New Chat button that appears only when sidebar is closed */}
       {!open && (
         <Button
-          variant="outline"
+          variant="default"
           size="icon"
           onClick={createNewChat}
-          className="h-8 w-8 rounded-md bg-background/80 backdrop-blur-lg shadow-sm border border-border/30 transition-all hover:bg-secondary/80"
+          className="h-8 w-8 rounded-md bg-primary text-primary-foreground shadow-sm transition-all hover:bg-primary/90"
           aria-label="New chat"
           title="New chat"
         >
