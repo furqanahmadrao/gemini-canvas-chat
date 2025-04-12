@@ -11,29 +11,28 @@ import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, MenuIcon, Sparkles } from "lucide-react";
+import { ChevronLeft, MenuIcon, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
+import { Toggle } from "@/components/ui/toggle";
 
 // Fixed toggle button component that's always visible
 const FixedToggleButton = () => {
   const { toggleSidebar, open } = useSidebar();
   
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggleSidebar}
-      className="fixed left-0 top-2 z-50 bg-background/80 backdrop-blur-sm shadow-sm rounded-r-md rounded-l-none border-r border-y border-border/50 transition-all hover:bg-secondary/80 h-10 w-10"
+    <Toggle
+      pressed={open}
+      onPressedChange={toggleSidebar}
+      className="fixed left-4 top-4 z-50 h-8 w-8 rounded-md bg-background/80 backdrop-blur-lg shadow-sm border border-border/30 transition-all hover:bg-secondary/80"
       aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-      tabIndex={0}
       title={open ? "Collapse sidebar" : "Expand sidebar"}
     >
       {open ? 
-        <ChevronLeft className="h-5 w-5" /> : 
-        <MenuIcon className="h-5 w-5" />
+        <ChevronLeft className="h-4 w-4" /> : 
+        <MenuIcon className="h-4 w-4" />
       }
-    </Button>
+    </Toggle>
   );
 };
 
