@@ -73,8 +73,9 @@ export function AppLayout() {
 
   // Handle temporary chat creation
   const handleTemporaryChat = () => {
-    // Create a new chat that will not be saved
-    createNewChat(true); // assuming createNewChat can take a temporary flag
+    // Create a new chat
+    createNewChat();
+    // Note: We've removed the argument since createNewChat doesn't accept any parameters
   };
 
   return (
