@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarInset, useSidebar } from "@/components/ui/sidebar";
 import { Chat } from "../chat/Chat";
@@ -10,7 +9,7 @@ import { ChatList } from "./sidebar/ChatList";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
-import { ChevronLeft, MenuIcon, MessageSquare, PlusCircle, Sparkles } from "lucide-react";
+import { ChevronLeft, MenuIcon, MessageSquare, SquarePen, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
 import { Button } from "@/components/ui/button";
@@ -47,7 +46,7 @@ const FixedToggleButton = () => {
           aria-label="New chat"
           title="New chat"
         >
-          <PlusCircle className="h-4 w-4" />
+          <SquarePen className="h-4 w-4" />
         </Button>
       )}
     </div>
