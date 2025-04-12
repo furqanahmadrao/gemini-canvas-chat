@@ -10,29 +10,47 @@ import { ChatList } from "./sidebar/ChatList";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, MenuIcon, Sparkles } from "lucide-react";
+import { ChevronLeft, MenuIcon, PlusCircle, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
 import { Toggle } from "@/components/ui/toggle";
+import { Button } from "@/components/ui/button";
 
 // Fixed toggle button component that's always visible
 const FixedToggleButton = () => {
   const { toggleSidebar, open } = useSidebar();
+  const { createNewChat } = useChat();
   
   return (
-    <Toggle
-      pressed={open}
-      onPressedChange={toggleSidebar}
-      className="fixed left-4 top-4 z-50 h-8 w-8 rounded-md bg-background/80 backdrop-blur-lg shadow-sm border border-border/30 transition-all hover:bg-secondary/80"
-      aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-      title={open ? "Collapse sidebar" : "Expand sidebar"}
-    >
-      {open ? 
-        <ChevronLeft className="h-4 w-4" /> : 
-        <MenuIcon className="h-4 w-4" />
-      }
-    </Toggle>
+    <div className="fixed left-4 top-4 z-50 flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleSidebar}
+        className="h-8 w-8 rounded-md bg-background/80 backdrop-blur-lg shadow-sm border border-border/30 transition-all hover:bg-secondary/80"
+        aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+        title={open ? "Collapse sidebar" : "Expand sidebar"}
+      >
+        {open ? 
+          <ChevronLeft className="h-4 w-4" /> : 
+          <MenuIcon className="h-4 w-4" />
+        }
+      </Button>
+
+      {/* New Chat button that appears only when sidebar is closed */}
+      {!open && (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={createNewChat}
+          className="h-8 w-8 rounded-md bg-background/80 backdrop-blur-lg shadow-sm border border-border/30 transition-all hover:bg-secondary/80"
+          aria-label="New chat"
+          title="New chat"
+        >
+          <PlusCircle className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 };
 
