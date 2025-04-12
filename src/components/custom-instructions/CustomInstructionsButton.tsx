@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CustomInstructionsModal } from "./CustomInstructionsModal";
 import { useSettings } from "@/providers/SettingsProvider";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function CustomInstructionsButton() {
   const [open, setOpen] = useState(false);
@@ -11,15 +12,26 @@ export function CustomInstructionsButton() {
 
   return (
     <>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={() => setOpen(true)}
-        className="gap-2 text-muted-foreground hover:text-foreground"
-      >
-        <Sparkles className="h-4 w-4" />
-        <span>{settings.customInstructions ? "Edit Instructions" : "Custom Instructions"}</span>
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setOpen(true)}
+              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span className="sr-only">
+                {settings.customInstructions ? "Edit Instructions" : "Custom Instructions"}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{settings.customInstructions ? "Edit Instructions" : "Custom Instructions"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <CustomInstructionsModal open={open} onOpenChange={setOpen} />
     </>
   );

@@ -10,11 +10,11 @@ import { ChatList } from "./sidebar/ChatList";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
-import { ChevronLeft, MenuIcon, PlusCircle, Sparkles } from "lucide-react";
+import { ChevronLeft, MenuIcon, MessageSquare, PlusCircle, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
-import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Fixed toggle button component that's always visible
 const FixedToggleButton = () => {
@@ -71,6 +71,12 @@ export function AppLayout() {
     }
   }, [isMobile]);
 
+  // Handle temporary chat creation
+  const handleTemporaryChat = () => {
+    // Create a new chat that will not be saved
+    createNewChat(true); // assuming createNewChat can take a temporary flag
+  };
+
   return (
     <SidebarProvider defaultOpen={!isMobile} open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex h-screen w-full bg-background">
@@ -103,7 +109,25 @@ export function AppLayout() {
                 Mind Labs
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleTemporaryChat}
+                      className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      <span className="sr-only">Temporary Chat</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>New Temporary Chat</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <CustomInstructionsButton />
             </div>
           </header>
