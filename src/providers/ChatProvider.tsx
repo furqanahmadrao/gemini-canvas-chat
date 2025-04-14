@@ -22,6 +22,7 @@ export interface Chat {
 
 interface ChatContextType {
   chats: Chat[];
+  filteredChats: Chat[];
   currentChat: Chat | null;
   createNewChat: () => void;
   saveChat: (chat: Chat) => void;
@@ -32,6 +33,7 @@ interface ChatContextType {
   deleteMessage: (messageId: string) => void;
   starChat: (chatId: string, starred: boolean) => void;
   sendMessage: (message: string) => Promise<void>;
+  searchChats: (query: string) => void;
   isLoading: boolean;
 }
 
@@ -44,11 +46,17 @@ interface ChatProviderProps {
 export function ChatProvider({ children }: ChatProviderProps) {
   const { settings } = useSettings();
   const [chats, setChats] = useLocalStorage<Chat[]>("gemini-chats", []);
+  const [filteredChats, setFilteredChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useLocalStorage<string | null>("gemini-current-chat", null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const currentChat = chats.find(chat => chat.id === currentChatId) || null;
+
+  // Initialize filtered chats with all chats
+  useEffect(() => {
+    setFilteredChats(chats);
+  }, [chats]);
 
   const createNewChat = () => {
     const newChat: Chat = {
@@ -136,6 +144,29 @@ export function ChatProvider({ children }: ChatProviderProps) {
         chat.id === chatId ? { ...chat, starred, updatedAt: Date.now() } : chat
       )
     );
+  };
+
+  // New search function
+  const searchChats = (query: string) => {
+    if (!query.trim()) {
+      setFilteredChats(chats);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const results = chats.filter(chat => {
+      // Search in chat title
+      if (chat.title.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // Search in chat messages
+      return chat.messages.some(message => 
+        message.content.toLowerCase().includes(lowerQuery)
+      );
+    });
+    
+    setFilteredChats(results);
   };
 
   // This function will call the Gemini API with the user's message
@@ -253,6 +284,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     <ChatContext.Provider
       value={{
         chats,
+        filteredChats,
         currentChat,
         createNewChat,
         saveChat,
@@ -263,6 +295,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
         deleteMessage,
         starChat,
         sendMessage,
+        searchChats,
         isLoading,
       }}
     >

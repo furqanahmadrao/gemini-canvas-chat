@@ -13,7 +13,13 @@ interface SidebarHeaderProps {
 export function SidebarHeader({ onClose }: SidebarHeaderProps) {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { createNewChat } = useChat();
+  const { createNewChat, searchChats } = useChat();
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    searchChats(query);
+  };
 
   return (
     <div className="flex flex-col space-y-2 p-4 border-b border-border/30">
@@ -58,7 +64,7 @@ export function SidebarHeader({ onClose }: SidebarHeaderProps) {
           <Input
             placeholder="Search chats..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearch}
             className="h-8 text-sm bg-secondary/50"
           />
         </div>
