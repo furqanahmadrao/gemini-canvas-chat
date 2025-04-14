@@ -23,10 +23,10 @@ const FixedToggleButton = () => {
   return (
     <div className="fixed left-4 top-4 z-50 flex items-center gap-2">
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         onClick={toggleSidebar}
-        className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-300"
+        className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800"
         aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
         title={open ? "Collapse sidebar" : "Expand sidebar"}
       >
@@ -39,10 +39,10 @@ const FixedToggleButton = () => {
       {/* New Chat button that appears only when sidebar is closed */}
       {!open && (
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={createNewChat}
-          className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-300"
+          className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800"
           aria-label="New chat"
           title="New chat"
         >
