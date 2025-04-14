@@ -9,7 +9,7 @@ import { ChatList } from "./sidebar/ChatList";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
 import { SettingsModal } from "../modals/SettingsModal";
 import { useChat } from "@/providers/ChatProvider";
-import { ChevronLeft, MenuIcon, MessageSquare, SquarePen, Sparkles } from "lucide-react";
+import { ChevronLeft, MenuIcon, SquarePen, MessageSquare, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CustomInstructionsButton } from "../custom-instructions/CustomInstructionsButton";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ const FixedToggleButton = () => {
         variant="outline"
         size="icon"
         onClick={toggleSidebar}
-        className="h-8 w-8 rounded-md bg-background/80 backdrop-blur-lg shadow-sm border border-border/30 transition-all hover:bg-secondary/80"
+        className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-300"
         aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
         title={open ? "Collapse sidebar" : "Expand sidebar"}
       >
@@ -39,10 +39,10 @@ const FixedToggleButton = () => {
       {/* New Chat button that appears only when sidebar is closed */}
       {!open && (
         <Button
-          variant="default"
+          variant="outline"
           size="icon"
           onClick={createNewChat}
-          className="h-8 w-8 rounded-md bg-primary text-primary-foreground shadow-sm transition-all hover:bg-primary/90"
+          className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-300"
           aria-label="New chat"
           title="New chat"
         >
