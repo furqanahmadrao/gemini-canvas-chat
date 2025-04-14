@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarInset, useSidebar } from "@/components/ui/sidebar";
 import { Chat } from "../chat/Chat";
@@ -22,32 +23,48 @@ const FixedToggleButton = () => {
   
   return (
     <div className="fixed left-4 top-4 z-50 flex items-center gap-2">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleSidebar}
-        className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800"
-        aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-        title={open ? "Collapse sidebar" : "Expand sidebar"}
-      >
-        {open ? 
-          <ChevronLeft className="h-4 w-4" /> : 
-          <MenuIcon className="h-4 w-4" />
-        }
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+            >
+              {open ? 
+                <ChevronLeft className="h-4 w-4" /> : 
+                <MenuIcon className="h-4 w-4" />
+              }
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{open ? "Collapse sidebar" : "Expand sidebar"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* New Chat button that appears only when sidebar is closed */}
       {!open && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={createNewChat}
-          className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800"
-          aria-label="New chat"
-          title="New chat"
-        >
-          <SquarePen className="h-4 w-4" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={createNewChat}
+                className="h-8 w-8 rounded-md bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                aria-label="New chat"
+              >
+                <SquarePen className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>New chat</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
     </div>
   );
@@ -120,7 +137,7 @@ export function AppLayout() {
                       className="h-9 w-9 text-muted-foreground hover:text-foreground"
                     >
                       <MessageSquare className="h-4 w-4" />
-                      <span className="sr-only">Temporary Chat</span>
+                      <span className="sr-only">New Temporary Chat</span>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
